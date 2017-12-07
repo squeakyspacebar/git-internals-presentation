@@ -1,0 +1,847 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<section>
+						<h2>Welcome to Git!</h2>
+						<aside class="notes" data-markdown>
+							During this presentation, I will be using the command line (also known as a terminal, or a command-line shell, which is a technical term for art for an operating system interaface, specifically). Please don't be intimidated, as becoming familiar with the terminal is part of understanding how so many developers.
+
+							I grew up learning Windows back when Windows was still a flimsy graphical interface and many actions were simply faster and easier by dropping down into the MS-DOS CLI. Not to seem condescending, but earnestly, if a six-year-old can pick up working with a command line interface, so can you.
+						</aside>
+					</section>
+					<section>
+						<p>A lot of people use Git without understanding how it works internally, forming a roadblock to learning advanced usage.</p>
+						<img data-src="img/git_xkcd.png">
+					</section>
+					<section>
+						<p>Hopefully this talk will help alleviate the above problem.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>What is a version control system?</p>
+					</section>
+					<section>
+						<p>A version control system (VCS) is basically a system for recording and managing the history of changes made within a project.</p>
+						<img style="width: 50%" data-src="img/library_of_alexandria.jpg">
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Uses of version control</p>
+						<img style="width: 100%" data-src="img/ecce_homo.jpg">
+					</section>
+					<section>
+						<p>An amazing backup system (you can roll back changes and recover from accidental deletions)</p>
+						<p><em>We can bring back that paragraph we accidentally deleted last week.</em></p>
+					</section>
+					<section>
+						<p>Faster recovery from errors and thereby cheaper experimentation (you can recover previous state by using simple commands instead of manually reproducing or removing your changes)</p>
+						<p><em>We can try out an experimental structure and simply discard it if we don’t like it.</em></p>
+					</section>
+					<section>
+						<p>Promotes transparency and facilitates reproducibility (you can see how a project developed and who made which changes)</p>
+						<p><em>Louis introduced that typo into the article a few versions ago.</em></p>
+					</section>
+					<section>
+						<p>Easier collaboration (you can manage and merge isolated changes more easily)</p>
+						<p><em>We'll just merge your changes to the concluding sections with our edits to the introduction.</em></p>
+					</section>
+					<section>
+						<p>This is much easier and more robust than manually handling versioned copies of files.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>What is a repository?</p>
+					</section>
+					<section>
+						<p>A repository is - simply put - the history of an entire project. It contains all tracked files and the history of their revisions.</p>
+					</section>
+					<section>
+						<p>Version control systems manage project histories through repositories.</p>
+					</section>
+					<section>
+						<p>Version control systems like Git capture <u>snapshots</u> of your work through time.</p>
+						<img data-src="img/git_version_tracking.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>What is Git?</p>
+					</section>
+					<section>
+						<p>Git is known as a DVCS (Distributed Version Control System) specifically designed to help manage distributed projects.</p>
+					</section>
+					<section>
+						<img data-src="img/torvalds.png">
+						<p>Git was originally written and released in 2005 by Linus Torvalds - the initial creator of Linux - specifically to help manage Linux kernel development.</p>
+					</section>
+				</section>
+				<section>
+					<section>What's so special about Git?</section>
+					<section>
+						<p>Popular version control systems that work on a centralized client-server model such as CVS (Concurrent Versions System) and its successor SVN (Subversion) require all repository actions to be run through a centralized server.</p>
+						<img data-src="img/network.jpg">
+					</section>
+					<section>
+						<p>This forces contributors to connect to a central server to commit changes, making it more difficult to track work on a project independently.</p>
+					</section>
+					<section>
+						<img data-src="img/cvcs.png">
+					</section>
+					<section>
+						Git gives you a local copy of the repository on your machine so you have a copy of the entire project's history and can do all repository actions locally, instead of having to perform them on the server.
+					</section>
+					<section>
+						<img data-src="img/dvcs.png">
+					</section>
+					<section>
+						This makes repository actions such as committing changes for historical tracking extremely fast as it is done locally. You can sync against a remote server at your own leisure.
+					</section>
+				</section>
+				<section>
+					<section>What is a hash?</section>
+					<section>
+						<p>In simplistic terms, a <em>hash</em> is a string generated by a <em>hash function</em> that is (theoretically) unique for each specific given input.</p>
+						<p>Mathematically speaking, hash functions should be <em>injective</em> (i.e. one-to-one). This means that using the exact same input should generate the exact same output hash.</p>
+						</script>
+					</section>
+					<section>
+						<img data-src="img/simple_hash_function.jpg">
+					</section>
+					<section>
+						<p>What are hashes used for in Git?</p>
+					</section>
+					<section>
+						<p>Hashes serve as integrity checksums to detect whether the data has been corrupted or modified, as well as unique identifiers for all its internal objects.</p>
+					</section>
+					<section>
+						<p>Git uses the SHA-1 hashing algorithm to generate hashes.</p>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							What does a SHA-1 hash look like?
+							```
+							message: sunlightisawesome
+							sha1-digest: 2f7b9fd44585e56bfe250c4554ce15cfc54991c3
+							```
+							A note on technical terminology:
+							- The input to a hash function is also known as a _message_
+							- The resulting output hash is also known as the _message digest_, or _digest_ for short
+						</script>
+					</section>
+					<section>
+						<p>The terms "hash" and "checksum" are often colloquially interchangable.</p>
+						<p>Strictly speaking, <em>checksum</em> is the term for values used to verify data integrity -- this isn't necessarily true of hashes.</p>
+					</section>
+					<section>
+						<p>Using <em>hashes</em> as <em>checksums</em> have the added benefit of being reasonably good unique identifiers.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Git Objects</p>
+					</section>
+					<section>
+						<p>We will be looking at three object types in Git:</p>
+						<img data-src="img/git_commit_anatomy.png">
+						<aside class="notes" data-markdown>
+							Commit: Snapshot
+							Tree: Directory Structure
+							Blob: Files
+						</aside>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>How does Git track changes internally?</p>
+					</section>
+					<section>
+						<img style="width:100%" data-src="img/git_commit_chain.png">
+						<p>Each commit is a version of your project at a particular point in time.</p>
+					</section>
+					<section>
+						<img style="width:100%" data-src="img/linked_list.png">
+						<p><em>This is what computer scientists like to call a linked list!</em></p>
+					</section>
+					<section>
+						<img style="width:100%" data-src="img/git_commit_snapshots.png">
+					</section>
+				</section>
+				<section>
+					<section data-transition="none">
+						<p>What actually happens during a commit?</p>
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree_min1.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree_min2.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree_min3.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0051.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0052.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0053.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0054.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0055.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0056.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0057.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0058.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0059.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0060.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0061.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0062.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0063.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0064.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0065.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0066.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0067.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0068.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0069.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0070.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0071.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0072.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/foo-0073.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Let's initialize a repository!</p>
+					</section>
+					<section>
+						<img data-src="img/plz_stop.jpg">
+						<p><em>But, wait!</em> Before we do, let's go over a little about Git's workflow.</p>
+					</section>
+					<section>
+						<img data-src="img/git_commit_workflow.png">
+					</section>
+					<section>
+						<p>What's being added is not the file itself, it is a snapshot of the content you want represented in that file.</p>
+					</section>
+					<section>
+						<p>This a subtle point that becomes more apparent when you think of adding partial file changes instead of the entire changeset for a file.</p>
+					</section>
+					<section>
+						<p>Think more like a director or photographer.</p>
+						<img data-src="img/tarantino_framing.jpg">
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Creating and initializing a repository.
+
+							```
+							$ git init
+							```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Adding a file to a commit.
+							```
+							$ git status
+							$ git add
+							$ git status
+							$ git diff --cached
+							$ git commit
+							```
+
+							<aside class="notes" data-markdown>
+								ifyougiveamouseacookie
+							</aside>
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Committing changes to an existing file.
+							```
+							$ git status
+							$ git add
+							$ git status
+							$ git diff --cached
+							$ git commit
+							```
+
+							<aside class="notes" data-markdown>
+								aynrandgivesamousenothing
+							</aside>
+						</script>
+					</section>
+					<section>
+						<img data-src="img/do_not_want.png">
+						<p>Oops. I don't actually want that change.</p>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Unstage changes.
+							```
+							$ git reset HEAD <path>
+							```
+
+							Discard unstaged changes.
+							```
+							$ git checkout -- <path>
+							```
+
+							Discard all staged and unstaged changes.
+							```
+							$ git reset --hard HEAD
+							```
+						</script>
+					</section>
+					<section>
+						<img data-src="img/bridge.png">
+						<p>Crap! I made a mistake and committed the wrong thing!</p>
+						<aside class="notes" data-markdown>
+							Please, no comments for the following example. _Trust me, I know_.
+
+							Create text file `jonbon.txt`.
+
+							Write content:
+
+							```
+							Shot through the heart, and you're too late, darling
+							You give love a bad name.
+							```
+
+							```
+							$ git add -A
+							$ git status
+							$ git diff --cached
+							$ git commit
+							$ git status
+							```
+						</aside>
+					</section>
+					<section>
+						<p>As long as you haven't pushed your changes publicly, it should be okay to clean up the history.</p>
+						<p class="fragment">Even if your changes are public, depending on your context, it may be okay to modify public history.</p>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Look for the point you wish to start from:
+
+							```
+							$ git log
+							```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							<p>Use the SHA-1 hash of the commit you want to reset to.</p>
+
+							```
+							$ git reset --soft <commit sha1>
+							```
+
+							<p class="fragment">The `--soft` option will leave the rolled back changes in the index.</p>
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Fix the content, add the changes, and commit. Now the history should look smooth.
+
+							```
+							$ git add <path>
+							$ git commit
+							$ git status
+							```
+
+							<aside class="notes" data-markdown>
+								Edited content:
+								Shot through the heart, and you're to blame, darling
+								You give love a bad name.
+
+								$ git add -A
+								$ git status
+								$ git diff --cached
+								$ git commit
+								$ git status
+							</aside>
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							If you've already committed a mistake to public history and can't safely alter history, the best practice is to revert the change using:
+
+							```
+							$ git revert <commit_sha1>
+							```
+
+							<p class="fragment">This creates a new commit on the history that undoes the changes from the selected commit, but does not alter history for others.</p>
+
+							<aside class="notes" data-markdown>
+								Add full lyrics.
+
+								$ git commit -a
+
+								Delete a chorus block.
+
+								$ git commit -a
+
+								$ git revert HEAD
+							</aside>
+						</script>
+					</section>
+					<section>
+						<img data-src="img/git_commit_lifecycle.png">
+					</section>
+				</section>
+				<section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Commit messages: Don't be like this guy.
+
+							<img data-src="img/commit_messages.png">
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Git Commit Message Best Practices
+							(http://chris.beams.io/posts/git-commit/)
+
+							1. Separate subject from body with a blank line
+							1. Limit the subject line to 50 characters
+							1. Capitalize the subject line
+							1. Do not end the subject line with a period
+							1. Use the imperative mood in the subject line
+							1. Wrap the body at 72 characters
+							1. Use the body to explain what and why vs. how
+						</script>
+					</section>
+				</section>
+				<section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Time to learn about branching!
+
+							<img data-src="img/tree_of_life.jpg">
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							What is a branch?
+
+							<img data-src="img/you_are_here.jpg">
+						</script>
+					</section>
+					<section>
+						<ul>
+							<li class="fragment">A branch is an independent history (or chain) of commits.</li>
+							<li class="fragment">Branches allow your project to take on multiple parallel lines of development independent of each other.</li>
+							<li class="fragment">Thinking about phylogenetic trees ("trees of life") is a good visual metaphor.</li>
+						</ul>
+					</section>
+					<section>
+						<p>Internally, a branch is simply a reference.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>What is a reference in Git?</p>
+						<p>(Since the question has been asked, you can assume it's a distinct thing.)</p>
+					</section>
+					<section>
+						<p>A reference is simply a "pointer" (yes, it's a technical term) to a specific commit.</p>
+						<img data-src="img/object_dag_tree1.png">
+					</section>
+					<section>
+						<p>References typically represent the head (i.e. latest) commit of a particular branch and are advanced forward when new commits are made.</p>
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree1.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree2.png">
+					</section>
+					<section data-background-color="#ffffff" data-transition="none">
+						<img style="box-shadow: none" data-src="img/object_dag_tree3.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						Let's take a closer look at references during branching.
+					</section>
+					<section data-background-color="#ffffff" data-transition="none" data-markdown>
+						<script type="text/markdown">
+							```
+							$ git branch
+							```
+
+							<img style="box-shadow: none" data-src="img/head_master.png">
+						</script>
+					</section>
+					<section data-background-color="#ffffff" data-transition="none" data-markdown>
+						<script type="text/markdown">
+							```
+							$ git branch testing
+							```
+
+							<img style="box-shadow: none" data-src="img/new_branch.png">
+						</script>
+					</section>
+					<section data-background-color="#ffffff" data-transition="none" data-markdown>
+						<script type="text/markdown">
+							```
+							$ git checkout testing
+							```
+
+							<img style="box-shadow: none" data-src="img/head_testing.png">
+						</script>
+					</section>
+					<section data-background-color="#ffffff" data-transition="none" data-markdown>
+						<script type="text/markdown">
+							```
+							$ git commit
+							```
+
+							<img style="box-shadow: none" data-src="img/testing_commit.png">
+						</script>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Question: When should I branch?</p>
+					</section>
+					<section>
+						<img data-src="img/lorraine_marty.png">
+						<p>Answer: Any time you're about to do anything that you might even remotely want to reverse or isolate.</p>
+					</section>
+					<section>
+						<img data-src="img/git_branch_experiment.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Reconciling branched work: Merging vs. rebasing</p>
+						<img data-src="img/bible_merge.png">
+						<img data-src="img/bible_rebase.png">
+					</section>
+					<section>
+						<p>Scenario: We branched to try something out, and it looks good.
+						Now we want to include those changes back into the main line of development.</p>
+						<img data-src="img/git_branch_experiment.png">
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Merging
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							<img data-src="img/git_merge_experiment.png">
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Rebasing
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							<img data-src="img/git_rebase_experiment1.png">
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							<img data-src="img/git_rebase_experiment2.png">
+						</script>
+					</section>
+				</section>
+				<section>
+					<section>
+						When do I chose to merge vs. rebase?
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Rebasing is probably the more difficult of the two to wrap your head around using properly.
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Unfortunately, a lot of it comes down to experience and it's hard to see how any of it applies right away.
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							However, there are some guidelines for rebasing:
+
+							<ul>
+								<li class="fragment">Try to use rebase when pulling or before pushing to other repositories.</li>
+								<li class="fragment">Rebase should be used to keep your _local_ history clean.</li>
+								<li class="fragment">Merging creates an extra commit, which clutters the history and can make it difficult to read if you're merging frequently.</li>
+							</ul>
+						</script>
+					</section>
+					<section>
+						<img data-src="img/git_merge_mess.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						Merge Conflicts
+					</section>
+					<section>
+						<p>What happens if you try to merge the same area of content that's been edited in different ways?</p>
+					</section>
+					<section>
+						<p>A merge conflict appears!</p>
+						<img data-src="img/merge_conflict.png">
+					</section>
+					<section>
+						<p>Dealing with merge conflicts can initially seem difficult and stressful when they appear, but if you keep practicing at it, it becomes second nature.</p>
+						<img data-src="img/angry_cat.gif">
+					</section>
+					<section>
+						<p>The technical details of resolving merge conflicts are best handled elsewhere, as it can occupy a short workshop by itself.</p>
+						<p>Check out <a href="https://github.com/learn-co-curriculum/git-merge-conflicts">https://github.com/learn-co-curriculum/git-merge-conflicts</a> for more information.</p>
+					</section>
+					<section>
+						<p>When there's a merge conflict, it requires the person reconciling the conflicting content to make editorial decisions as to what should actually be committed to the project history.</p>
+					</section>
+					<section>
+						<p>It really is as primitive as that.</p>
+					</section>
+				</section>
+				<section>
+					<section>Branching Workflows</section>
+					<section>
+						<img data-src="img/main_branches.png">
+					</section>
+					<section>
+						<img data-src="img/git_branching_model.png">
+					</section>
+				</section>
+				<section>
+					<section>Remote Repositories</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							There is another way to create a repository besides `git init`: You can clone a repository.
+
+							<img data-src="img/dolly_clones.png">
+						</script>
+					</section>
+					<section>That's pretty much what it sounds like. It gives you a copy of a repository as it is at that point in time.</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							```
+							$ git clone git@github.com:loandy/solfege.git
+							```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							To see all your configured remote repositories:
+							```
+							$ git remote -v
+							```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							_Caveat_: If you cloned your repository, a default remote called `origin` should be created with the location of the original repository.
+
+							However, if you created your repository through `git init`, you will have to configure all your remotes yourself.
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							`git clone` can be replicated by simpler commands.
+
+							```
+							$ git remote add origin <github_repository_url>
+							$ git fetch
+							$ git checkout master
+							```
+						</script>
+					</section>
+					<section>
+						<p>Decentralized remote repositories are a big part of why Git has been such a powerful tool.</p>
+						<img data-src="img/git_decentralized.png">
+					</section>
+					<section>
+						<p>Once you get used to the idea that Git repositories are independent entities that, in essence, must discuss amongst each other constantly in order to maintain consensus, it becomes a little easier to understand its distributed nature.</p>
+						<img data-src="img/platonic_academy.png">
+					</section>
+					<section>
+						GitHub is, at its core, simply a service for gathering remote repositories under a user account and easing interactions with remote repositories.
+					</section>
+				</section>
+				<section>
+					<section>What is forking?</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							From Wikipedia:
+							> In software engineering, a project fork happens when developers take a copy of source code from one software package and start independent development on it, creating a distinct and separate piece of software. The term often implies not merely a development branch, but a split in the developer community, a form of schism.
+						</script>
+					</section>
+					<section>
+						<img data-src="img/github_fork.png">
+						<p>Forking is a more abstract idea made into a sort of formal idiom by Github.</p>
+					</section>
+					<section>
+						<p>Within GitHub, when you fork a project, it essentially means you're cloning that project's repository to your account on GitHub's servers.</p>
+					</section>
+					<section>
+						<p>Forking is cloning, albeit between GitHub's servers instead of between your machine and others.</p>
+					</section>
+				</section>
+				<section>
+					<section>Let's make a new repository on GitHub!</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							How do we send work to be recorded in a remote repository?
+
+							```
+							$ git remote add origin <github_url>
+							$ git push origin master
+							```
+						</script>
+					</section>
+					<section>
+						<p>How do we receive work recorded in a remote repository?</p>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Don't do this:
+
+							```
+							$ git pull origin master
+                            ```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/markdown">
+							Do this:
+
+							```
+							$ git pull --rebase origin master
+							```
+
+							Or better yet:
+
+							```
+							$ git fetch
+							$ git rebase origin/master
+							```
+						</script>
+					</section>
+					<section>
+						<p>To `git pull` it all together:</p>
+						<img data-src="img/git_overview.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>GitHub Remote Workflows</p>
+					</section>
+					<section>
+						<img data-src="img/github_model.png">
+						<aside class="notes" data-markdown>
+							Upstream a.k.a. "Golden Repository"
+						</aside>
+					</section>
+					<section>
+						<p>Why do this?</p>
+						<p class="fragment">I can be assured that any default push, intentional or accidental, will not directly impact the main project.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Thank you!</p>
+						<img data-src="img/happy_cat.png">
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
